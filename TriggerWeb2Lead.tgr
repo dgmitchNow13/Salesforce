@@ -1,0 +1,17 @@
+trigger TriggerWeb2Lead on Lead (after insert) {
+ public static Boolean run = true;
+   
+    //This trigger is triggered off the Web-to-Lead form. Within the form the leadsource is set to 'Web2Lead' for easier
+    //dictation. Cache Org is enabled and stores the phone number to be used later on the verify check callout to Vonage. This is also the initial call to Vonage verify Request, passing the phone number in the
+    //Web-to-Lead form. 
+    if(Trigger.isInsert){
+        if(Trigger.isAfter){
+            for(Lead lphones: Trigger.new){
+                If(lphones.leadsource == 'Web2Lead'){
+                    // system.debug('what is the phone number in the trigger '+ lphones.phone +' and the lead source is '+ lphones.leadsource);
+                    verifyRequestCheck.buildVerifyRequest(lphones.phone);  
+                }
+            }
+        }
+    }
+}
